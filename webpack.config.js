@@ -71,7 +71,7 @@ var config = {
 		      query: {
 
 		      		// 不适用async await 函数可以不要  transform-runtime 和 stage-3
-			        presets: ['react','es2015','stage-3'],
+			        presets: ['react','es2015','stage-1'],
 			        plugins: ['transform-runtime'],
 
 			        //presets: ['react','es2015'],

@@ -20,6 +20,7 @@ var server = new WebpackDevServer(compiler, {
 	inline:true,
 	quiet: false,
     compress: false,
+    disableHostCheck: true,
     historyApiFallback: true,
     stats: {
         // Config for minimal console.log mess.
