@@ -36,4 +36,4 @@ var server = new WebpackDevServer(compiler, {
 });
 server.listen(port);
 
-console.log(`Open http://${hosts}:${port}/index.html`)
+console.log(`Open http://${hosts}:${port}/app.html`)
