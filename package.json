@@ -2,7 +2,7 @@
   "name": "react-webpack-example",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node server.js",
     "dev": "cross-env NODE_ENV=daily webpack",
