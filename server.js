@@ -4,6 +4,8 @@ var WebpackDevServer = require("webpack-dev-server")
 
 var config = require("./webpack.config.js");
 
+require('./mock-server/index')
+
 var port = "8080";
 var hosts = "127.0.0.1";
 
