@@ -1,47 +1,143 @@
-# 使用
+# react 开发规范
+
+* author：Saohui
+    * react 开发规范，部分由 Saohui 编写
+    * 如果发现问题可以，联系微信号： `w_z_w_520`
+
+### react 架构模型
+![](http://upload-images.jianshu.io/upload_images/604678-78348f70f6ad52c3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+### 目录结构
 
 ```
-git clone https://github.com/jun-lu/react-webpack-example.git
-cd react-webpack-example
-npm install
-npm start //访问 http://127.0.0.1:8080/app.html
+- components => 公共组件的封装
+- libs => 一些库函数，工具函数
+- module => 基础模块，如：数据请求接口
+- pages
+  - pageComponent => 页面组件，方便单页面进行组件化（当一个页面比较复杂的时候，需要进行组件化，但是这部分组件往往复用率比较低，这时候如果放到公共的组件库中，就会加大维护成本）
+    - "pageName" => 页面的命名规范遵循和页面名称一致的一个文件夹，然后在里面进行新建 js 文件进行组件开发
 ```
 
-## 目录
+### 项目相关工具
 
-````
--build 
--src
-server.js
-webpack.config.js
-````
+* `webpack`
+* `less`
+* `git`
+* `nodejs`
+* `babel`
 
-## 服务端口
+### 环境、开发、调试
 
-server.js 中修改 `port` 变量
+1. `git clone 项目地址`
+2. `sudo npm install`
+3. `npm run start`
+4. `浏览器访问 http://localhost:8080/ ` Server指向 ./src-react 目录
+5. `修改 host 文件使用，我们的域名进行本地开发测试`
+    * 127.0.0.1	a.uat.yuantutech.com 
+    * 127.0.0.1	a.daily.yuantutech.com 
+    * 127.0.0.1	a.s.yuantutech.com 
+    * 127.0.0.1	a.test.yuantutech.com
+6. `把浏览器访问 localhost 改为 a.uat.yuantutech.com`
 
-## 构建
+### 关于 git branch
 
-webpack.config.js
-````
-//源文件目录
-var rootPath = "./src";
-//发布文件目录
-var distPath = "./build";
-````
+##### 开发新功能
 
-* cdn 
+`git checkout -b daily/a.b.c`  升级b  比如当前线上版本号`1.0.0` 新功能的版本应该为 `1.1.0`.
 
-````
-var daily_publicPath = "http://daily.yuantutech.com";
-var dist_publicPath = "http://s.yuantutech.com";
-````
 
-## 命令
+##### 修改bug
 
-````
-npm start //本地开发
-npm run dev //测试包 不压缩代码 使用  daily_publicPath 域名
-npm run dist //线上包 压缩代码 使用  dist_publicPath 域名
+`git checkout -b daily/a.b.c`  升级c  比如当前线上版本号`1.0.0` 新功能的版本应该为 `1.0.1`.
 
-````
+#### 切换完新版本后
+
+* 修改 package.json 中的版本号
+* `npm run dev`
+* 然后就可以进行开发了
+
+
+### 版本发布规则
+
+#### 测试环境
+
+* `npm run dev` // 打包测试环境代码
+* `git add . `  // 添加到 git 本地缓存区
+* `git commit -m 'xxx'  ` // 添加到 git 本地仓库
+* `git push origin daily/x.x.x  ` // 把本地代码提交到服务器 
+* 这时候就可以打开浏览器，`访问 uat.yuantutech.com/yuantu/x.x.x/xxx.html` 
+
+#### 线上代码发布
+* `git merge master` // 合并主分支
+* `npm run dist `  // 打包线上环境代码
+* `git add . `  // 添加到 git 本地缓存区
+* `git commit -m 'xxx'  ` // 添加到 git 本地仓库
+* `git push origin daily/x.x.x  ` // 把本地代码提交到服务器 
+* `git tag publish/x.x.x  ` // 添加版本 tag
+* `git push origin publish/x.x.x  ` // 把 tag 提交到远程
+* 这时候已经发布版本完成，`访问 s.yuantutech.com/yuantu/x.x.x/xxx.html` 
+* 最后需要把代码合并到主分支
+* `git checkout master` // 切到主分支
+* `git merge daily/x.x.x ` // 把代码合到主分支
+* `npm run dev`
+* `git push origin master`
+
+### less 命名空间
+
+* 当你新建一个页面后，需要进行样式的自定义时，需要在本 less 文件中包一个模块名称相同的 class 选择器
+* 然后给页面组件的顶层的元素的 className 加上这个 class
+
+例如：有一个页面叫 page-name.js
+
+page-name.less
+```
+.page-name {
+    // 这里面写你的样式
+}
+```
+
+page-name.js
+```
+...
+export default class PageName extends React.Component {
+    render () {
+        return <div className="page-name">
+        </div>
+    }
+}
+```
+
+### 关于组件开发规范
+
+在开发组件过程中，我们把代码分为两个区域
+* render 区
+* 业务逻辑 区
+
+例如
+```
+...
+export default class xxx extends Smart... {
+
+    constructor ( props ) {
+        super( props )
+    }
+
+    ... // 这边是业务逻辑区
+
+    /***** render 区开始 *****/
+
+    renderItem () {
+        return <div>...</div>
+    }
+
+    render () {
+        return <div className="page-name">
+        </div>
+    }
+}
+```
+
+### 关于数据加载
+
+* 数据加载，没有特殊情况统一把借口调用放入一下文件（jsonp）
+    * UserCenter => 普通接口
